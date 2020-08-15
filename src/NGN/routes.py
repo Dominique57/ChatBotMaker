@@ -30,7 +30,7 @@ def handle_message(recipient_id, user_input):
         if user_input in ('help', 'name'):
             user.change_state(user_input)
 
-    handles[user.state](user, user_input, session)
+    handles[user.state](user, user_input)
 
     session.commit()
     session.close()
