@@ -32,11 +32,24 @@ class User(Base):
         """ Changes the state (ie. next function to be executed) of a user """
         self.state = state
 
+    def get_bot(self):
+        """ Should not be used:
+        create a function to do whatever action you want,
+        this is for testing purposes only"""
+        return bot
+
     def send_message(self, message):
         bot.send_text_message(self.fb_id, message)
 
+    def mark_seen(self):
+        bot.send_action(self.fb_id, 'mark_seen')
+
+    def mark_writing(self, writing=True):
+        action = 'typing_on' if writing else 'typing_off'
+        bot.send_action(self.fb_id, action)
+
     def get_argument(self, name, default='None'):
-        res = self.arguments.filter(Argument.name==name).scalar().value
+        res = self.arguments.filter(Argument.name == name).scalar().value
         if res is None:
             return default
         return res
