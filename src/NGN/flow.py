@@ -18,11 +18,9 @@ def create_handle(name, message=None, func_message=None, redir=None,
 
         if arg_name:
             if arg_check and not arg_check(user_input):
-                print('User message does not conform')
                 user.send_message('Message is in invalid format. Try again.')
                 return
             else:
-                print('User message conforms, saving to the server')
                 argument = user.arguments.filter(Argument.name == arg_name)\
                                          .scalar()
                 if argument is None:
@@ -41,14 +39,4 @@ def create_handle(name, message=None, func_message=None, redir=None,
         if callback:
             callback(user)
     handles[name] = func
-    handles[name] = func
-
-
-create_handle('home', message='Main Page')
-create_handle('help', message='Here are some useful commands', redir='home')
-create_handle('name', message='What is your name?', redir='name_response')
-create_handle('name_response',
-              func_message=lambda user: f"Hi {user.get_argument('name')}",
-              callback=lambda user: print(f'{user}'),
-              arg_check=lambda text: len(text) >= 3,
-              arg_name='name', redir='home')
+    return func

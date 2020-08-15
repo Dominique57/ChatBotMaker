@@ -1,4 +1,4 @@
-from . import json, inspect
+from . import json, inspect, create_handle
 
 
 def import_function(function_string, function_name, arg_count):
@@ -6,7 +6,8 @@ def import_function(function_string, function_name, arg_count):
         locals()[function_name] = None
         exec(function_string)
         result_function = locals()[function_name]
-        locals()[function_name] = None
+        if result_function is None:
+            raise Exception('Function has incorrect name')
         if len(inspect.signature(result_function).parameters) != arg_count:
             raise Exception(f'Function does not have {arg_count} argument(s)')
         return True, result_function
@@ -51,11 +52,36 @@ def check_json(data):
                 if value not in handles_set:
                     return f'handle: {handle} Invalid redirection: {value}'
 
+
 def convert_json_to_handles(data):
-    return {}
+    for handle in data['handles']:
+        for key in handle.keys():
+            if key in ('func_message', 'callback', 'arg_check'):
+                success, res = import_function(handle[key], key, 1)
+                handle[key] = res
+        create_handle(**handle)
+
 
 def decode_json(raw_data):
     data = json.loads(raw_data)
     check_json(data)
-    handles = convert_json_to_handles(data)
-    return handles
+    # TODO: check for errors
+    convert_json_to_handles(data)
+
+
+json_data = {'handles': [
+    {'name': 'home', 'message': 'Main Page'},
+    {'name': 'help', 'message': 'Here are some useful commands',
+     'redir': 'home'},
+    {'name': 'name', 'message': 'What is your name?',
+     'redir': 'name_response'},
+    {'name': 'name_response',
+     'func_message':
+         'def func_message(user): return f\'Hi {user.get_argument("name")}\'',
+     'callback': 'def callback(user): print(f\'{user}\')',
+     'arg_check': 'def arg_check(text): return len(text) >= 3',
+     'arg_name': 'name', 'redir': 'home'},
+]}
+
+
+decode_json(json.dumps(json_data))
