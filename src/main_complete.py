@@ -4,7 +4,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 # app imports
 from flask import Flask, request
-from package import Bot, Dispatcher, Messenger, Database
+from package import Bot, Dispatcher, Database
+from package.defaults.dev import DevMessenger
 
 
 engine = create_engine('sqlite:///foo.db')
@@ -63,7 +64,7 @@ dispatcher_config = {
         },
     }
 }
-messenger = Messenger()
+messenger = DevMessenger()
 dispatcher = Dispatcher(dispatcher_config)
 database = Database(engine, Session, User, Argument)
 bot = Bot({}, messenger, dispatcher, database)
@@ -75,8 +76,9 @@ app = Flask(__name__)
 def ngn_bot():
     if request.method == 'GET':
         token_sent = request.args.get("hub.verify_token")
+        token_resonse = request.args.get("hub.challenge")
         if token_sent == FACEBOOK_CHECK_TOKEN:
-            return FACEBOOK_CHECK_TOKEN
+            return token_resonse
         return 'Invalid token_check'
     if request.method == 'POST':
         output = request.get_json()
