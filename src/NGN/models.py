@@ -1,6 +1,6 @@
 from . import Column, String, Integer, ForeignKey, Table, relationship, Base,\
-              engine
-from . import bot
+              engine, fb_bot
+
 
 user_channel_association = Table(
     'users_channels', Base.metadata,
@@ -30,23 +30,20 @@ class User(Base):
 
     def change_state(self, state):
         """ Changes the state (ie. next function to be executed) of a user """
+        print(f'Changed state to {state}')
         self.state = state
 
-    def get_bot(self):
-        """ Should not be used:
-        create a function to do whatever action you want,
-        this is for testing purposes only"""
-        return bot
-
     def send_message(self, message):
-        bot.send_text_message(self.fb_id, message)
+        self.mark_writing()
+        fb_bot.send_text_message(self.fb_id, message)
+        self.mark_writing(False)
 
     def mark_seen(self):
-        bot.send_action(self.fb_id, 'mark_seen')
+        fb_bot.send_action(self.fb_id, 'mark_seen')
 
     def mark_writing(self, writing=True):
         action = 'typing_on' if writing else 'typing_off'
-        bot.send_action(self.fb_id, action)
+        fb_bot.send_action(self.fb_id, action)
 
     def get_argument(self, name, default='None'):
         res = self.arguments.filter(Argument.name == name).scalar().value

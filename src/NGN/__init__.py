@@ -1,11 +1,13 @@
-from pymessenger.bot import Bot
+from pymessenger.bot import Bot as FbBot
 from flask import Flask, request
 from sqlalchemy import Column, String, Integer, ForeignKey, Table
 from sqlalchemy.orm import relationship
 import json
 import inspect
+import nntplib
+import socket
 
-from .app import ACCESS_TOKEN, VERIFY_TOKEN, app, bot
+from .app import ACCESS_TOKEN, VERIFY_TOKEN, app, fb_bot
 from .db_manager import Session, engine, Base
 from .models import User, Server, Channel, Argument
 from .flow import handles, create_handle

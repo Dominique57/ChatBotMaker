@@ -1,4 +1,5 @@
-from . import app, request, bot, VERIFY_TOKEN, Session, User, handles
+from . import app, request, VERIFY_TOKEN, Session, User, handles, nntplib
+
 
 @app.route("/ngn_bot", methods=['GET', 'POST'])
 def receive_message():
@@ -23,11 +24,12 @@ def handle_message(recipient_id, user_input):
     session = Session()
     user = session.query(User).filter(User.fb_id == recipient_id).scalar()
     if not user:
-        user = User(fb_id=recipient_id, state='home')
+        user = User(fb_id=recipient_id, state='welcome')
         session.add(user)
+        session.commit()
 
-    if user.state == 'home':
-        if user_input in ('help', 'name'):
+    if user.state in ('welcome', 'home'):
+        if user_input in ('help', 'subscribe', 'unsubscribe'):
             user.change_state(user_input)
 
     handles[user.state](user, user_input)
