@@ -4,8 +4,8 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, relationship
 # app imports
 from flask import Flask, request
-from package import Bot, Dispatcher, Database
-from package.defaults.dev import DevMessenger
+from chatbotmaker import Bot, Dispatcher, Database
+from chatbotmaker.defaults.dev import DevMessenger
 
 
 engine = create_engine('sqlite:///foo.db')

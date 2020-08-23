@@ -1,8 +1,8 @@
 # app imports
 from flask import Flask, request
-from package import Bot, Dispatcher
-from package.defaults import SimpleDatabase
-from package.defaults.facebook import FacebookMessenger, facebook_route
+from chatbotmaker import Bot, Dispatcher
+from chatbotmaker.defaults import SimpleDatabase
+from chatbotmaker.defaults.facebook import FacebookMessenger, facebook_route
 
 
 dispatcher_config = {
