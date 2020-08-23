@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 
 setuptools.setup(
-    name="botmaker",
+    name="chatbotmaker",
     version="0.0.1",
     author="Dominique MICHEL",
     author_email="dominique.michel@epita.fr",
