@@ -16,31 +16,34 @@ This module is based around a bot class in which you inject the necessary code
 #### Messenger
 
 You can create your own messenger class that should inherit the
-chatbotmaker.Messenger class. It must implement a send(user\_id: str,
-message:str) method and can implement other optional methods.
+**chatbotmaker.Messenger** class.
+
+It must implement a send(user\_id: str, message:str)
+method and can implement other optional methods.
 
 #### Dispatcher
 
 The dispatcher recieves your config as a dictionnary in the following format:
-{
-  'action': {
-    'handle_name': {
-        'pref-func': lambda user: user.send_message('Hi there'),
-        'func': lambda user, user_input: user.change_state('home'),
-        'post-func': lambda user: user.send_message('You are being redirected'),
-    },
-    'home': {
-        'pref-func': lambda user: user.send_message('Welcome back!'),
-        'func': 'lambda user, user_input: user.change_state(user_input)',
-    },
-    'input': {
-        'func': 'lambda user, user_input: (
-                    user.store_argument('input', user_input),
-                    user.change_state('home'),
-                )',
-    },
-  }
-}
+
+{  
+  'action': {  
+    'handle_name': {  
+        'pref-func': lambda user: user.send_message('Hi there'),  
+        'func': lambda user, user_input: user.change_state('home'),  
+        'post-func': lambda user: user.send_message('You are redirected'),  
+    },  
+    'home': {  
+        'pref-func': lambda user: user.send_message('Welcome back!'),  
+        'func': 'lambda user, user_input: user.change_state(user_input)',  
+    },  
+    'input': {  
+        'func': 'lambda user, user_input: (  
+                    user.store_argument('input', user_input),  
+                    user.change_state('home'),  
+                )',  
+    },  
+  }  
+}  
 The user is an ExtendedUser class that has following attributes added:
 - send\_message(message: str)
 - change\_state(state: str)
@@ -55,16 +58,16 @@ In the most configurable form you need to define yourself the whole database
 scheme. def __init__(self, engine, session, user\_class, argument\_class) It
 MUST have a User(users) and Argument(arguments) table with:
 - users:
-- - id = Column(Integer, primary\_key=True)
-- - fb\_id = Column(String)
-- - state = Column(String)
-- - arguments = relationship('Argument', back\_populates='user', lazy='dynamic')
+  - id = Column(Integer, primary\_key=True)
+  - fb\_id = Column(String)
+  - state = Column(String)
+  - arguments = relationship('Argument', back\_populates='user', lazy='dynamic')
 - arguments:
-- - id = Column(Integer, primary\_key=True)
-- - name = Column(String)
-- - value = Column(String)
-- - user\_id = Column(Integer, ForeignKey('users.id'))
-- - user = relationship('User', uselist=False, back\_populates='arguments')
+  - id = Column(Integer, primary\_key=True)
+  - name = Column(String)
+  - value = Column(String)
+  - user\_id = Column(Integer, ForeignKey('users.id'))
+  - user = relationship('User', uselist=False, back\_populates='arguments')
 
 ## Usage
 
@@ -75,7 +78,7 @@ coded. They are in chatbotmaker.default.
 #### Facebook
 - FacebookMessenger(authentication\_token)
 - facebook\_route(request, facebook\_check\_token, bot)
--   - this flask routing is can be called directly from the routing point
+  - this flask routing should be called directly from the routing point
 
 #### Dev
 
