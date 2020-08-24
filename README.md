@@ -24,25 +24,28 @@ method and can implement other optional methods.
 
 The dispatcher recieves your config as a dictionnary in the following format:
 
+<pre>
 {  
-, 'actions': {  
-,   'handle\_name': {  
-,       'pref-func': lambda user: user.send\_message('Hi there'),  
-,       'func': lambda user, user\_input: user.change\_state('home'),  
-,       'post-func': lambda user: user.send\_message('You are redirected'),  
-,   },  
-,   'home': {  
-,       'pref-func': lambda user: user.send\_message('Welcome back!'),  
-,       'func': 'lambda user, user\_input: user.change\_state(user\_input)',  
-,   },  
-,   'input': {  
-,       'func': 'lambda user, user\_input: (  
-,                   user.store\_argument('input', user\_input),  
-,                   user.change\_state('home'),  
-,               )',  
-,   },  
-, }  
-}  
+  'actions': {  
+    'handle\_name': {  
+        'pref-func': lambda user: user.send\_message('Hi there'),  
+        'func': lambda user, user\_input: user.change\_state('home'),  
+        'post-func': lambda user: user.send\_message('You are redirected'),  
+    },  
+    'home': {  
+        'pref-func': lambda user: user.send\_message('Welcome back!'),  
+        'func': 'lambda user, user\_input: user.change\_state(user\_input)',  
+    },  
+    'input': {  
+        'func': 'lambda user, user\_input: (  
+                    user.store\_argument('input', user\_input),  
+                    user.change\_state('home'),  
+                )',  
+    },  
+  }  
+}
+</pre>
+
 The user is an ExtendedUser class that has following attributes added:
 - send\_message(message: str)
 - change\_state(state: str)
