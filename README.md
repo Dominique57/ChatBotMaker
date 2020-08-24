@@ -91,7 +91,7 @@ We have the dev file containing:
 
 We have the simple\_database file containing:
 - SimpleDatabase(config)  # sqlalchemy config file
--   - This created automatically the User and Argument class. In the future,
+  - This created automatically the User and Argument class. In the future,
 you will be able to inject tables and relationships
 
 ## Installation
@@ -104,7 +104,7 @@ Using PIP since its a pip module repository:
 ## Contributing
 
 Do no hesitate to make a pull request or launch a discussion. I am looking
-foreward to expand the default zone.
+foreward to expand the default capabilites.
 
 ## Authors and acknowledgment
 
@@ -116,3 +116,6 @@ Author:
 The project has reached its first final phase. Now there will be:
 - need to think about the design and facilitate user-database integration
 - need of tests (why not make a CI pipeline)
+
+Once the backend is functional and robust, i aim to make a frontend plateform
+to allow non-programming people to create bots too.
