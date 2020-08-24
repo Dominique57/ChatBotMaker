@@ -6,10 +6,10 @@ def json_check(json_object: dict, key_name: str, optional=False,
     """ Checks wether a json object-key respects some rules """
     value = json_object.get(key_name)
     name = str(json_object)
-    if optional:
-        return value
     if value is None:
-        raise Exception(f'{name} missed key: {key_name}')
+        if optional:
+            return value
+        raise Exception(f'{name} missing key: {key_name}')
 
     ext_name = name + ': ' + key_name
     if from_type and not isinstance(value, from_type):
