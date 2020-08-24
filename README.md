@@ -16,8 +16,7 @@ This module is based around a bot class in which you inject the necessary code
 #### Messenger
 
 You can create your own messenger class that should inherit the
-**chatbotmaker.Messenger** class.
-
+**chatbotmaker.Messenger** class.  
 It must implement a send(user\_id: str, message:str)
 method and can implement other optional methods.
 
@@ -26,23 +25,23 @@ method and can implement other optional methods.
 The dispatcher recieves your config as a dictionnary in the following format:
 
 {  
-  'action': {  
-    'handle_name': {  
-        'pref-func': lambda user: user.send_message('Hi there'),  
-        'func': lambda user, user_input: user.change_state('home'),  
-        'post-func': lambda user: user.send_message('You are redirected'),  
-    },  
-    'home': {  
-        'pref-func': lambda user: user.send_message('Welcome back!'),  
-        'func': 'lambda user, user_input: user.change_state(user_input)',  
-    },  
-    'input': {  
-        'func': 'lambda user, user_input: (  
-                    user.store_argument('input', user_input),  
-                    user.change_state('home'),  
-                )',  
-    },  
-  }  
+, 'actions': {  
+,   'handle\_name': {  
+,       'pref-func': lambda user: user.send\_message('Hi there'),  
+,       'func': lambda user, user\_input: user.change\_state('home'),  
+,       'post-func': lambda user: user.send\_message('You are redirected'),  
+,   },  
+,   'home': {  
+,       'pref-func': lambda user: user.send\_message('Welcome back!'),  
+,       'func': 'lambda user, user\_input: user.change\_state(user\_input)',  
+,   },  
+,   'input': {  
+,       'func': 'lambda user, user\_input: (  
+,                   user.store\_argument('input', user\_input),  
+,                   user.change\_state('home'),  
+,               )',  
+,   },  
+, }  
 }  
 The user is an ExtendedUser class that has following attributes added:
 - send\_message(message: str)
