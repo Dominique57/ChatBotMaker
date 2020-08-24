@@ -7,13 +7,13 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="chatbotmaker",
-    version="0.0.1",
+    version="0.0.3",
     author="Dominique MICHEL",
     author_email="dominique.michel@epita.fr",
     description="This package automates the process of bot creation",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/dominique57/NewsGroupNotifier",
+    url="https://github.com/Dominique57/ChatBotMaker",
     packages=setuptools.find_packages(exclude=["*.tests"]),
     install_requires=[
         'sqlalchemy',
