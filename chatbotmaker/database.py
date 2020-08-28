@@ -1,5 +1,6 @@
 """ Database class file"""
-from . import Column, Integer, String, relationship, ForeignKey
+from . import Column, Integer, String, relationship, ForeignKey,\
+              declarative_base, engine_from_config, sessionmaker
 from . import ExtendedUser
 
 
@@ -48,8 +49,21 @@ def create_argument_class(base):
 
 class Database:
     """ Database representation (only show what exists) """
-    def __init__(self, engine, session, user_class, argument_class):
-        self.engine = engine
-        self.session = session
-        self.user_class = user_class
-        self.argument_class = argument_class
+
+    def __init__(self, config, create_database=False):
+        self.base = declarative_base()
+        self.init_default_tables()
+        self.engine = engine_from_config(config)
+        if create_database:
+            self.create_database()
+
+    def init_default_tables(self):
+        """ Initializes the default classes/tables """
+        self.user_class = create_user_class(self.base)
+        self.argument_class = create_argument_class(self.base)
+
+    def create_database(self):
+        """ Creates the database and end the final initialisation """
+        self.base.metadata.create_all(self.engine)
+        self.session_maker = sessionmaker()
+        self.session_maker.configure(bind=self.engine)
