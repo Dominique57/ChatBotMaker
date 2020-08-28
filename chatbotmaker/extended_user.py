@@ -14,9 +14,8 @@ class ExtendedUser:
 
     def send_message(self, message: str):
         """ Sends a message to the user(reprented by this object) """
-        reciepient_id = self.user.fb_id
         self.messenger.mark_writing(self.fb_id, True)
-        self.messenger.send(reciepient_id, message)
+        self.messenger.send(self.fb_id, message)
         self.messenger.mark_writing(self.fb_id, False)
 
     def change_state(self, name: str):
@@ -28,10 +27,6 @@ class ExtendedUser:
     def execute_handle(self, user_input: str):
         """ Executes the correct handle depending of the user.state """
         self.dispatcher.execute_func(self, user_input)
-
-    def mark_seen(self):
-        """ Marks the message as seen """
-        self.messenger.mark_seen(self.fb_id)
 
     def get_argument(self, name, default=None):
         """ Query the argument of a user """

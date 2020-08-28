@@ -2,7 +2,7 @@
 
 
 class Messenger:
-    """ Class that reoresebts a messenger object (interface) """
+    """ Class that represents a messenger object (interface) """
 
     def send(self, user_id: str, text: str):
         """ Sends to the user_id (backend must understand) the text message"""
