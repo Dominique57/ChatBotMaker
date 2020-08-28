@@ -24,13 +24,11 @@ class Bot:
             session.commit()
 
         # extend the user
-        ext_user = ExtendedUser(user, self.messenger, self.dispatcher,
-                                self.database)
-        ext_user.mark_seen()
+        user.extend(self.messenger, self.dispatcher, self.database)
+        user.mark_seen()
         # call the handle
-        ext_user.execute_handle(user_input)
+        user.execute_handle(user_input)
 
         session.commit()
         session.close()
-
         return f'{user_id}\'s request has been handled'

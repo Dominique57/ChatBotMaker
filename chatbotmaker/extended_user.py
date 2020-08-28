@@ -9,14 +9,11 @@ class ExtendedUser:
         self.dispatcher = dispatcher
         self.database = database
 
-    def __getattr__(self, name):
-        return self.user.__getattribute__(name)
-
     def send_message(self, message: str):
         """ Sends a message to the user(reprented by this object) """
-        self.messenger.mark_writing(self.fb_id, True)
-        self.messenger.send(self.fb_id, message)
-        self.messenger.mark_writing(self.fb_id, False)
+        self.messenger.mark_writing(self.user.fb_id, True)
+        self.messenger.send(self.user.fb_id, message)
+        self.messenger.mark_writing(self.user.fb_id, False)
 
     def change_state(self, name: str):
         """ Changed a users state"""
@@ -31,7 +28,7 @@ class ExtendedUser:
     def get_argument(self, name, default=None):
         """ Query the argument of a user """
         Argument = self.database.argument_class
-        res = self.arguments.filter(Argument.name == name).scalar()
+        res = self.user.arguments.filter(Argument.name == name).scalar()
         if res is None:
             return default
         return res.value
@@ -39,9 +36,10 @@ class ExtendedUser:
     def store_argument(self, name, value):
         """ Creates or replace Argument of user """
         Argument = self.database.argument_class
-        argument = self.arguments.filter(Argument.name == name).scalar()
+        argument = self.user.arguments.filter(Argument.name == name).scalar()
         if argument is None:
-            self.arguments.append(argument := Argument(name=name, value=value))
+            self.user.arguments.append(
+                argument := Argument(name=name, value=value))
         else:
             argument.value = value
         return argument

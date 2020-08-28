@@ -1,5 +1,6 @@
 """ Database class file"""
 from . import Column, Integer, String, relationship, ForeignKey
+from . import ExtendedUser
 
 
 def create_user_class(base):
@@ -17,6 +18,13 @@ def create_user_class(base):
         def __init__(self, fb_id, state):
             self.fb_id = fb_id
             self.state = state
+            self.extended = None
+
+        def extend_user(self, messenger, dispatcher, database):
+            """ Add sugar calling methods """
+            self.extended = ExtendedUser(self, messenger, dispatcher, database)
+            setattr(self, '__getattr__',
+                    lambda self, name: getattr(self.extended, name))
 
     return User
 
