@@ -1,6 +1,8 @@
 """ SimpleDatabase class file"""
 from . import Column, Integer, String, relationship, ForeignKey,\
               declarative_base, engine_from_config, sessionmaker
+from ..database import create_user_class, create_argument_class
+
 
 class SimpleDatabase:
     """ Database representation and basic user management """
@@ -18,36 +20,5 @@ class SimpleDatabase:
 
     def init_default_tables(self):
         """ Initializes the default databases """
-        class User(self.base):
-            """ User class """
-            __tablename__ = 'users'
-
-            id = Column(Integer, primary_key=True)
-            fb_id = Column(String)
-            state = Column(String)
-            # Arguments (One to Many)
-            arguments = relationship('Argument', back_populates='user',
-                                     lazy='dynamic')
-
-            def __init__(self, fb_id, state):
-                self.fb_id = fb_id
-                self.state = state
-
-            def __repr__(self):
-                return f'User: {self.fb_id}'
-
-        self.user_class = User
-
-        class Argument(self.base):
-            """ Argument class """
-            __tablename__ = 'arguments'
-
-            id = Column(Integer, primary_key=True)
-            name = Column(String)
-            value = Column(String)
-            # User 1-Many relationship
-            user_id = Column(Integer, ForeignKey('users.id'))
-            user = relationship('User', uselist=False,
-                                back_populates='arguments')
-
-        self.argument_class = Argument
+        self.user_class = create_user_class(self.base)
+        self.argument_class = create_argument_class(self.base)
