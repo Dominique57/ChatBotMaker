@@ -44,13 +44,17 @@ def create_argument_class(base):
         user = relationship('User', uselist=False,
                             back_populates='arguments')
 
+        def __init__(self, name, value):
+            self.name = name
+            self.value = value
+
     return Argument
 
 
 class Database:
     """ Database representation (only show what exists) """
 
-    def __init__(self, config, create_database=False):
+    def __init__(self, config, create_database=True):
         self.base = declarative_base()
         self.init_default_tables()
         self.engine = engine_from_config(config)
