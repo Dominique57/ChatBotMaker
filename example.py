@@ -1,7 +1,6 @@
 # app imports
 from flask import Flask, request
-from chatbotmaker import Bot, Dispatcher
-from chatbotmaker.defaults import SimpleDatabase
+from chatbotmaker import Bot, Dispatcher, Database
 from chatbotmaker.defaults.facebook import FacebookMessenger, facebook_route
 
 
@@ -25,7 +24,7 @@ FACEBOOK_CHECK_TOKEN = 'VERIFY_TOKEN'
 FACEBOOK_AUTH_TOKEN = 'EAAKnsCzlM7wBAM0waYVmDwMFMg1s6GMDoDCXSV1ZADQ9xxhzonZAKhHmJ8TZBhN58IKd9cUlAprdc1lBPFhXmRQTmBv8aNZAq6ko2wVTwF0xxOKDkwrD2iRKeQEVzjCk2J6eNAfCzkD2uQ4rGv96QwZC24p8sZC2GrS4uv25WNgQZDZD'
 messenger = FacebookMessenger(FACEBOOK_AUTH_TOKEN)
 dispatcher = Dispatcher(dispatcher_config)
-database = SimpleDatabase({'sqlalchemy.url': 'sqlite:///foo.db'})
+database = Database({'sqlalchemy.url': 'sqlite:///foo.db'})
 bot = Bot({}, messenger, dispatcher, database)
 app = Flask(__name__)
 
