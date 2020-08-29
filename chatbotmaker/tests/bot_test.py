@@ -7,7 +7,7 @@ def test_user_handle_query_commit_close_Database():
     # Given
     messenger, dispatcher, database = Mock(), Mock(), Mock()
     bot = Bot({}, messenger, dispatcher, database)
-    database.session.return_value = (session := Mock())
+    database.session_maker.return_value = (session := Mock())
     # When
     bot.user_handle('user_id', 'user_message')
     # Then
@@ -23,12 +23,12 @@ def test_user_handle_extend_marks_seen_execute_handle():
     filter_ = Mock(scalar=Mock(return_value=user))
     query = Mock(filter=Mock(return_value=filter_))
     session = Mock(query=Mock(return_value=query))
-    database.session = Mock(return_value=session)
+    database.session_maker = Mock(return_value=session)
     # When
     bot = Bot({}, messenger, dispatcher, database)
     bot.user_handle('user_id', 'user_message')
     # Then
-    user.extend.assert_called_once_with(messenger, dispatcher, database)
+    user.extend_user.assert_called_once_with(messenger, dispatcher, database)
     user.mark_seen.assert_called_once()
     user.execute_handle.assert_called_once_with('user_message')
 
@@ -40,7 +40,7 @@ def test_create_user_if_not_exists():
     filter_ = Mock(scalar=Mock(return_value=None))
     query = Mock(filter=Mock(return_value=filter_))
     session = Mock(query=Mock(return_value=query))
-    database.session = Mock(return_value=session)
+    database.session_maker = Mock(return_value=session)
     # When
     bot = Bot({}, messenger, dispatcher, database)
     bot.user_handle(user_id, user_message)

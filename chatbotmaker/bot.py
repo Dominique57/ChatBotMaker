@@ -13,7 +13,7 @@ class Bot:
 
     def user_handle(self, user_id: str, user_input: str) -> str:
         """ An implementation of the user_handle """
-        session = self.database.session()
+        session = self.database.session_maker()
         User = self.database.user_class
         # Get or Create the user
         req = session.query(User).filter(User.fb_id == user_id)
@@ -24,7 +24,7 @@ class Bot:
             session.commit()
 
         # extend the user
-        user.extend(self.messenger, self.dispatcher, self.database)
+        user.extend_user(self.messenger, self.dispatcher, self.database)
         user.mark_seen()
         # call the handle
         user.execute_handle(user_input)

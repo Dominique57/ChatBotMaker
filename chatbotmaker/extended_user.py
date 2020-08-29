@@ -17,13 +17,17 @@ class ExtendedUser:
 
     def change_state(self, name: str):
         """ Changed a users state"""
-        self.dispatcher.execute_post_func(self)
+        self.dispatcher.execute_post_func(self.user)
         self.user.state = name
-        self.dispatcher.execute_pre_func(self)
+        self.dispatcher.execute_pre_func(self.user)
 
     def execute_handle(self, user_input: str):
         """ Executes the correct handle depending of the user.state """
-        self.dispatcher.execute_func(self, user_input)
+        self.dispatcher.execute_func(self.user, user_input)
+
+    def mark_seen(self):
+        """ Marks the message as seen """
+        self.messenger.mark_seen(self.user.fb_id)
 
     def get_argument(self, name, default=None):
         """ Query the argument of a user """
