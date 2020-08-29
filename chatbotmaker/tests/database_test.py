@@ -1,6 +1,6 @@
 from ..database import Database, create_user_class, create_argument_class
 from .. import declarative_base, Column, Integer
-from . import pytest, patch, Mock
+from . import pytest, os, patch, Mock
 
 
 @pytest.mark.parametrize('generator,name,attributes', [
@@ -27,14 +27,21 @@ def test_init_not_create_database():
 
 
 def test_init_create_database():
-    with patch.object(Database, 'create_database', Mock()):
-        config = {'sqlalchemy.url': 'sqlite:///foo.db'}
-        database = Database(config)
-        database.create_database.assert_called_once()
-    database.base = Mock()
-    database.create_database()
-    database.base.metadata.create_all.assert_called_once()
-    # TODO: remove foo.db
+    try:
+        with patch.object(Database, 'create_database', Mock()):
+            config = {'sqlalchemy.url': 'sqlite:///foo.db'}
+            database = Database(config)
+            database.create_database.assert_called_once()
+        database.base = Mock()
+        database.create_database()
+        database.base.metadata.create_all.assert_called_once()
+    except Exception as E:
+        raise E
+    finally:
+        try:
+            os.remove('foo.db')
+        except OSError:
+            pass
 
 
 """
