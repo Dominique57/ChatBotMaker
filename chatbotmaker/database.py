@@ -21,11 +21,14 @@ def create_user_class(base):
             self.state = state
             self.extended = None
 
+        def __getattr__(self, name):
+            if self.extended is not None:
+                return getattr(self.extended, name)
+            return getattr(self, name)
+
         def extend_user(self, messenger, dispatcher, database):
             """ Add sugar calling methods """
             self.extended = ExtendedUser(self, messenger, dispatcher, database)
-            setattr(self, '__getattr__',
-                    lambda self, name: getattr(self.extended, name))
 
     return User
 
