@@ -26,8 +26,8 @@ def test_change_state():
     # When
     user.change_state('welcome')
     # Then
-    dispatcher.execute_pre_func.assert_called_once_with(user)
-    dispatcher.execute_post_func.assert_called_once_with(user)
+    dispatcher.execute_pre_func.assert_called_once_with(user.user)
+    dispatcher.execute_post_func.assert_called_once_with(user.user)
     assert user.user.state == 'welcome'
 
 
@@ -39,7 +39,7 @@ def test_execute_handle():
     # When
     user.execute_handle('toto')
     # Then
-    dispatcher.execute_func.assert_called_once_with(user, 'toto')
+    dispatcher.execute_func.assert_called_once_with(user.user, 'toto')
 
 
 def test_get_argument_existing_with_default():
