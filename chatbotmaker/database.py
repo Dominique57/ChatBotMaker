@@ -22,7 +22,8 @@ def create_user_class(base):
             self.extended = None
 
         def __getattr__(self, name):
-            if self.extended is not None:
+            # gettatribute avoids recursion calling gettattr again
+            if self.__getattribute__('extended') is not None:
                 return getattr(self.extended, name)
             return getattr(self, name)
 
