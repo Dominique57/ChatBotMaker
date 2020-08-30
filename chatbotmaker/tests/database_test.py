@@ -1,5 +1,5 @@
 from ..database import Database, create_user_class, create_argument_class
-from .. import declarative_base, Column, Integer
+from .. import declarative_base, Column, Integer, relationship
 from . import pytest, os, patch, Mock
 
 
@@ -44,14 +44,19 @@ def test_init_create_database():
             pass
 
 
-"""
+class Empty:
+    pass
+
+
 def test_create_user():
+    user_class = create_user_class(Empty)
     user = user_class('some_id', 'some_state')
     assert user.fb_id == 'some_id'
     assert user.state == 'some_state'
 
 
 def test_create_user_and_extend():
+    user_class = create_user_class(Empty)
     user = user_class('some_id', 'some_state')
     user.extend_user(Mock(), Mock(), Mock())
     user.change_state('new_state')
@@ -60,7 +65,7 @@ def test_create_user_and_extend():
 
 
 def test_create_argument():
+    argument_class = create_argument_class(Empty)
     argument = argument_class('some_name', 'some_value')
     assert argument.name == 'some_name'
     assert argument.value == 'some_value'
-"""
