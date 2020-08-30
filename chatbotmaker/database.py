@@ -16,10 +16,13 @@ def create_user_class(base):
         arguments = relationship('Argument', back_populates='user',
                                  lazy='dynamic')
 
-        def __init__(self, fb_id, state):
+        def __init__(self, fb_id, state=None, default_state='welcome'):
             self.fb_id = fb_id
-            self.state = state
             self.extended = None
+            if state is None:
+                self.init_state(default_state)
+            else:
+                self.init_state(state)
 
         def __getattr__(self, name):
             # gettatribute avoids recursion calling gettattr again
