@@ -55,26 +55,72 @@ def test_execute_handle():
 
 def test_get_argument_existing_with_default():
     # Given
+    user, res = Mock(), 'result'
+    user.arguments.filter().scalar().value = res
+    # user.arguments.filter = Mock(scalar=Mock(return_value=mock_res))
+    extended_user = ExtendedUser(user, None, None, Mock())
     # When
+    arg = extended_user.get_argument('name', 'default')
     # Then
-    pass
+    assert arg == res
 
 
 def test_get_argument_existing_no_default():
-    pass
+    # Given
+    user, res = Mock(), 'result'
+    user.arguments.filter().scalar().value = res
+    # user.arguments.filter = Mock(scalar=Mock(return_value=mock_res))
+    extended_user = ExtendedUser(user, None, None, Mock())
+    # When
+    arg = extended_user.get_argument('name')
+    # Then
+    assert arg == res
 
 
 def test_get_argument_missing_no_default():
-    pass
+    # Given
+    user = Mock()
+    user.arguments.filter().scalar = Mock(return_value=None)
+    # user.arguments.filter = Mock(scalar=Mock(return_value=mock_res))
+    extended_user = ExtendedUser(user, None, None, Mock())
+    # When
+    arg = extended_user.get_argument('name')
+    # Then
+    assert arg == None
 
 
 def test_get_argument_missing_with_default():
-    pass
+    # Given
+    user = Mock()
+    user.arguments.filter().scalar = Mock(return_value=None)
+    # user.arguments.filter = Mock(scalar=Mock(return_value=mock_res))
+    extended_user = ExtendedUser(user, None, None, Mock())
+    # When
+    arg = extended_user.get_argument('name', 'default')
+    # Then
+    assert arg == 'default'
 
 
 def test_store_argument_existing():
-    pass
+    # Given
+    user, argument = Mock(), Mock()
+    user.arguments.filter().scalar = Mock(return_value=argument)
+    # user.arguments.filter = Mock(scalar=Mock(return_value=mock_res))
+    extended_user = ExtendedUser(user, None, None, Mock())
+    # When
+    extended_user.store_argument('name', 'value')
+    # Then
+    assert argument.value == 'value'
 
 
 def test_store_argument_not_existing():
-    pass
+    # Given
+    user, database = Mock(), Mock()
+    user.arguments.filter().scalar = Mock(return_value=None)
+    # user.arguments.filter = Mock(scalar=Mock(return_value=mock_res))
+    extended_user = ExtendedUser(user, None, None, database)
+    # When
+    extended_user.store_argument('name', 'value')
+    # Then
+    user.arguments.append.assert_called_once()
+    database.argument_class.assert_called_once_with(name='name', value='value')
