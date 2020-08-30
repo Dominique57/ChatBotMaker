@@ -49,23 +49,58 @@ class Empty:
 
 
 def test_create_user():
+    # Given
     user_class = create_user_class(Empty)
+    # When
     user = user_class('some_id', 'some_state')
+    # Then
     assert user.fb_id == 'some_id'
     assert user.state == 'some_state'
 
 
 def test_create_user_and_extend():
+    # Given
     user_class = create_user_class(Empty)
     user = user_class('some_id', 'some_state')
+    # When
     user.extend_user(Mock(), Mock(), Mock())
+    # Then
+    assert user.extended is not None
+
+    # When
     user.change_state('new_state')
+    # Then
     user.extended.dispatcher.execute_pre_func.assert_called_once()
     assert user.state == 'new_state'
 
 
 def test_create_argument():
+    # Given
     argument_class = create_argument_class(Empty)
+    # When
     argument = argument_class('some_name', 'some_value')
+    # Then
     assert argument.name == 'some_name'
     assert argument.value == 'some_value'
+
+
+def test_not_extended_user_missing_attr_arg_redirection():
+    # Given
+    user_class = create_user_class(Empty)
+    user = user_class('user_id', 'some_state')
+    # When / Then nothing
+    with pytest.raises(AttributeError) as exception_info:
+        user.attribute_not_existing
+        user.method_not_existing()
+    assert "'User'" in str(exception_info)
+
+def test_extended_user_missing_attr_arg_redirection():
+    # Given
+    user_class = create_user_class(Empty)
+    user = user_class('user_id', 'some_state')
+    user.extend_user(Mock(), Mock(), Mock())
+    # When / Then nothing
+    with pytest.raises(AttributeError) as exception_info:
+        user.attribute_not_existing
+        user.method_not_existing()
+    assert "'ExtendedUser'" in str(exception_info)
