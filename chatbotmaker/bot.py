@@ -16,15 +16,20 @@ class Bot:
         session = self.database.session_maker()
         User = self.database.user_class
         # Get or Create the user
-        req = session.query(User).filter(User.fb_id == user_id)
-        user = req.scalar()
-        if not user:
+        user = session.query(User).filter(User.fb_id == user_id).scalar()
+        new_user = user is None
+        # Create new user
+        if new_user:
             user = User(fb_id=user_id, state='welcome')
             session.add(user)
             session.commit()
 
-        # extend the user
+        # extend user
         user.extend_user(self.messenger, self.dispatcher, self.database)
+        # if new user, use extended to initialize
+        if new_user:
+            user.init_state()
+
         user.mark_seen()
         # call the handle
         user.execute_handle(user_input)
