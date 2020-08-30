@@ -134,16 +134,3 @@ def test_execute_func():
     dispatcher.execute_func(user, "som_fake_input")
     # Then
     assert user.state == 'new_state'
-
-
-def test_execute_post_func_invalid_state():
-    # Given
-    config = {
-        'actions': {
-        }
-    }
-    dispatcher = Dispatcher(config)
-    user = Mock(state='invalid_state')
-    # When
-    with pytest.raises(KeyError):
-        dispatcher.execute_post_func(user)

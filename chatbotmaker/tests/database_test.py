@@ -27,21 +27,13 @@ def test_init_not_create_database():
 
 
 def test_init_create_database():
-    try:
-        with patch.object(Database, 'create_database', Mock()):
-            config = {'sqlalchemy.url': 'sqlite:///foo.db'}
-            database = Database(config)
-            database.create_database.assert_called_once()
-        database.base = Mock()
-        database.create_database()
-        database.base.metadata.create_all.assert_called_once()
-    except Exception as E:
-        raise E
-    finally:
-        try:
-            os.remove('foo.db')
-        except OSError:
-            pass
+    with patch.object(Database, 'create_database', Mock()):
+        config = {'sqlalchemy.url': 'sqlite:///foo.db'}
+        database = Database(config)
+        database.create_database.assert_called_once()
+    database.base = Mock()
+    database.create_database()
+    database.base.metadata.create_all.assert_called_once()
 
 
 class Empty:
@@ -93,6 +85,7 @@ def test_not_extended_user_missing_attr_arg_redirection():
         user.attribute_not_existing
         user.method_not_existing()
     assert "'User'" in str(exception_info)
+
 
 def test_extended_user_missing_attr_arg_redirection():
     # Given
