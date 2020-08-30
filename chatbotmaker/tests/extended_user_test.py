@@ -42,6 +42,16 @@ def test_init_state():
     dispatcher.execute_pre_func.assert_called_once_with(user.user)
 
 
+def test_mark_seen():
+    # Given
+    messenger = Mock()
+    user = ExtendedUser(Mock(), messenger, None, None)
+    # When
+    user.mark_seen()
+    # Then
+    messenger.mark_seen.assert_called_once()
+
+
 def test_execute_handle():
     # Given
     dispatcher = Mock()
