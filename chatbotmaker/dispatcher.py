@@ -19,16 +19,42 @@ def json_check(json_object: dict, key_name: str, optional=False,
     return value
 
 
+def initialize_from_function_name(state_name, env=None):
+    """ Initializes a handle from its name and the environment it has
+        been defined in"""
+    if env is None:
+        env = globals()
+    result = {}
+    optionals = ['pre_func', 'post_func']
+    obligatorys = ['func']
+    for optional in optionals:
+        if (value := env.get(f'{optional}_{state_name}')) is not None:
+            result[optional] = value
+    for obligatory in obligatorys:
+        result[obligatory] = env[f'{obligatory}_{state_name}']
+    return result
+
+
 class Dispatcher:
     """ Dispatchs function regarding user input """
-    def __init__(self, config: dict):
+
+    DEFAULT = object()
+
+    def __init__(self, config: dict, env=None):
         self.config = config
+        self.initialize_default_handles(env)
         self.check_config()
+
+    def initialize_default_handles(self, env):
+        """ Loads the DEFAULT handles from the env """
+        action = self.config['actions']
+        for name in action:
+            if action[name] == self.DEFAULT:
+                action[name] = initialize_from_function_name(name, env)
 
     def check_config(self):
         """ Check if config object is valid """
-        config = self.config  # avoid repetition of self in "self.config"
-        actions = json_check(config, 'actions', from_type=dict)
+        actions = json_check(self.config, 'actions', from_type=dict)
         for name, action in actions.items():
             # check that action is a dict
             json_check(actions, name, from_type=dict)
