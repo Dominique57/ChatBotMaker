@@ -69,7 +69,7 @@ def test_execute_pre_func_exists():
     config = {
         'actions': {
             'home': {
-                'func': lambda user, text: text, 'pre-func': func, }}}
+                'func': lambda user, text: text, 'pre_func': func, }}}
     dispatcher = Dispatcher(config)
     user = Mock(state='home')
     # When
@@ -98,7 +98,7 @@ def test_execute_post_func_exists():
     config = {
         'actions': {
             'home': {
-                'func': lambda user, text: text, 'post-func': func, }}}
+                'func': lambda user, text: text, 'post_func': func, }}}
     dispatcher = Dispatcher(config)
     user = Mock(state='home')
     # When

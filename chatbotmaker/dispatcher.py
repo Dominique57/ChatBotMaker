@@ -40,7 +40,7 @@ class Dispatcher:
     def execute_pre_func(self, user):
         """ Executes the pre-call of a handle """
         action = self.config['actions'][user.state]
-        if callback := action.get('pre-func'):
+        if callback := action.get('pre_func'):
             callback(user)
 
     def execute_func(self, user, user_input: str):
@@ -50,5 +50,5 @@ class Dispatcher:
     def execute_post_func(self, user):
         """ Executes the post-call of a handle """
         action = self.config['actions'][user.state]
-        if callback := action.get('post-func'):
+        if callback := action.get('post_func'):
             callback(user)
