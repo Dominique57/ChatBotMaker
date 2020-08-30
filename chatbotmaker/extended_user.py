@@ -21,9 +21,8 @@ class ExtendedUser:
         self.user.state = name
         self.dispatcher.execute_pre_func(self.user)
 
-    def init_state(self, name: str):
-        """ Changed a users state"""
-        self.user.state = name
+    def init_state(self):
+        """ Execute the necessary when a user first gets its state """
         self.dispatcher.execute_pre_func(self.user)
 
     def execute_handle(self, user_input: str):

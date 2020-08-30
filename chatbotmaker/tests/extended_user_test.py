@@ -26,9 +26,20 @@ def test_change_state():
     # When
     user.change_state('welcome')
     # Then
-    dispatcher.execute_pre_func.assert_called_once_with(user.user)
     dispatcher.execute_post_func.assert_called_once_with(user.user)
+    dispatcher.execute_pre_func.assert_called_once_with(user.user)
     assert user.user.state == 'welcome'
+
+
+def test_init_state():
+    # Given
+    dispatcher = Mock()
+    dispatcher.execute_pre_func = Mock()
+    user = ExtendedUser(Mock(state='welcome'), None, dispatcher, None)
+    # When
+    user.init_state()
+    # Then
+    dispatcher.execute_pre_func.assert_called_once_with(user.user)
 
 
 def test_execute_handle():
