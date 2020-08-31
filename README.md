@@ -42,9 +42,21 @@ The dispatcher recieves your config as a dictionnary in the following format:
                     user.change\_state('home'),  
                 )',  
     },  
+    'help': Dispatcher.DEFAULT,
   }  
 }
 </pre>
+
+###### DEFAULT
+
+You can associate function by their name to make the binding process easier.
+You must name your functions with {key}\_{handle\_name} (eg: func\_help,
+pre\_func\_help, post\_func\_help). You then must pass the binding table
+dictionary to the Dispatcher constructor alongside the config
+** \_\_init\_\_(self, config, env=None) ** . This generally are locals() or
+globals().
+
+###### How does it work?
 
 The user is the orm User class to whom we add some method (redirect failing
 attribute calls):
