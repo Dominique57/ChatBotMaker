@@ -89,7 +89,6 @@ def test_dispatcher_init_with_default():
     ('execute_pre_func', 'pre_func', []),
     ('execute_post_func', 'post_func', []),
     ('execute_enter_func', 'enter_func', []),
-    ('execute_exit_func', 'exit_func', []),
     ('execute_func', 'func', ['user_input']),
 ])
 def test_execute_event_wrappers(method_name, name, args):

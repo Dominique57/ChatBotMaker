@@ -71,10 +71,6 @@ class Dispatcher:
         """ Executes the pre-call of a handle """
         return self.execute_event(user, 'enter_func')
 
-    def execute_exit_func(self, user):
-        """ Executes the pre-call of a handle """
-        return self.execute_event(user, 'exit_func')
-
     def execute_pre_func(self, user):
         """ Executes the pre-call of a handle """
         return self.execute_event(user, 'pre_func')
