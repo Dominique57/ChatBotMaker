@@ -83,7 +83,6 @@ def test_not_extended_user_missing_attr_arg_redirection():
     # When / Then nothing
     with pytest.raises(AttributeError) as exception_info:
         user.attribute_not_existing
-        user.method_not_existing()
     assert "'User'" in str(exception_info)
 
 
@@ -95,5 +94,4 @@ def test_extended_user_missing_attr_arg_redirection():
     # When / Then nothing
     with pytest.raises(AttributeError) as exception_info:
         user.attribute_not_existing
-        user.method_not_existing()
     assert "'ExtendedUser'" in str(exception_info)

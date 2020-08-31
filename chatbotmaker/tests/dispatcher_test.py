@@ -1,5 +1,11 @@
-from ..dispatcher import json_check, Dispatcher
+from ..dispatcher import json_check, Dispatcher, initialize_from_function_name
 from . import pytest, Mock
+
+
+# Multiple read only variable usage (lambda avoids coverage miss detection)
+func_welcome = lambda user, user_input: user_input
+pre_func_welcome = lambda user, user_input: user_input
+post_func_welcome = lambda user, user_input: user_input
 
 
 @pytest.mark.parametrize('json,key', [
@@ -60,6 +66,23 @@ def test_dispatcher_init():
     }
     dispatcher = Dispatcher(config)
     assert dispatcher.config == config
+
+
+def test_dispatcher_init_with_default():
+    config = {
+        'actions': {
+            'welcome': Dispatcher.DEFAULT,
+            'home': {'func': lambda user, text: text},
+        }
+    }
+    # When
+    dispatcher = Dispatcher(config, globals())
+    # Then
+    welcom_obj = dispatcher.config['actions']['welcome']
+    assert callable(dispatcher.config['actions']['home']['func'])
+    assert welcom_obj['pre_func'] == pre_func_welcome
+    assert welcom_obj['func'] == func_welcome
+    assert welcom_obj['post_func'] == post_func_welcome
 
 
 def test_execute_pre_func_exists():
@@ -134,3 +157,17 @@ def test_execute_func():
     dispatcher.execute_func(user, "som_fake_input")
     # Then
     assert user.state == 'new_state'
+
+
+def test_initialize_from_function_name_with_optionals():
+    # When
+    res = initialize_from_function_name('welcome', globals())
+    # Then
+    assert res.get('func') == func_welcome
+    assert res.get('pre_func') == pre_func_welcome
+    assert res.get('post_func') == post_func_welcome
+
+
+def test_initialize_from_function_name_missing_mandatory():
+    with pytest.raises(KeyError):
+        res = initialize_from_function_name('welcome', locals())
