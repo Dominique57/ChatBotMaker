@@ -1,5 +1,5 @@
 from ..dispatcher import json_check, Dispatcher, initialize_from_function_name
-from . import pytest, Mock
+from . import pytest, Mock, patch
 
 
 # Multiple read only variable usage (lambda avoids coverage miss detection)
@@ -85,78 +85,42 @@ def test_dispatcher_init_with_default():
     assert welcom_obj['post_func'] == post_func_welcome
 
 
-def test_execute_pre_func_exists():
+@pytest.mark.parametrize('method_name, name, args', [
+    ('execute_pre_func', 'pre_func', []),
+    ('execute_post_func', 'post_func', []),
+    ('execute_enter_func', 'enter_func', []),
+    ('execute_exit_func', 'exit_func', []),
+    ('execute_func', 'func', ['user_input']),
+])
+def test_execute_event_wrappers(method_name, name, args):
     # Given
-    def func(user):
-        user.state = 'new_state'
+    user = Mock()
+    dispatcher = Dispatcher({'actions': {}}, None)
+    # When
+    with patch.object(dispatcher, 'execute_event', Mock()):
+        method = getattr(dispatcher, method_name)
+        method(user, *args)
+        dispatcher.execute_event.assert_called_once_with(user, name, *args)
+
+
+@pytest.mark.parametrize('method_name, name, args', [
+    ('execute_event', 'pre_func', []),
+    ('execute_event', 'func', ['']),
+])
+def test_execute_events(method_name, name, args):
+    # Given
     config = {
         'actions': {
             'home': {
-                'func': lambda user, text: text, 'pre_func': func, }}}
+                'func': Mock(),
+                'pre_func': Mock(), }}}
     dispatcher = Dispatcher(config)
     user = Mock(state='home')
     # When
-    dispatcher.execute_pre_func(user)
+    method = getattr(dispatcher, method_name)
+    method(user, name, *args)
     # Then
-    assert user.state == 'new_state'
-
-
-def test_execute_pre_func_invalid_state():
-    # Given
-    config = {
-        'actions': {
-        }
-    }
-    dispatcher = Dispatcher(config)
-    user = Mock(state='invalid_state')
-    # When
-    with pytest.raises(KeyError):
-        dispatcher.execute_pre_func(user)
-
-
-def test_execute_post_func_exists():
-    # Given
-    def func(user):
-        user.state = 'new_state'
-    config = {
-        'actions': {
-            'home': {
-                'func': lambda user, text: text, 'post_func': func, }}}
-    dispatcher = Dispatcher(config)
-    user = Mock(state='home')
-    # When
-    dispatcher.execute_post_func(user)
-    # Then
-    assert user.state == 'new_state'
-
-
-def test_execute_post_func_invalid_state():
-    # Given
-    config = {
-        'actions': {
-        }
-    }
-    dispatcher = Dispatcher(config)
-    user = Mock(state='invalid_state')
-    # When
-    with pytest.raises(KeyError):
-        dispatcher.execute_post_func(user)
-
-
-def test_execute_func():
-    # Given
-    def test_func(user):
-        user.state = 'new_state'
-    config = {
-        'actions': {
-            'home': {
-                'func': lambda user, text: test_func(user), }}}
-    dispatcher = Dispatcher(config)
-    user = Mock(state='home')
-    # When
-    dispatcher.execute_func(user, "som_fake_input")
-    # Then
-    assert user.state == 'new_state'
+    config['actions']['home'][name].assert_called_once_with(user, *args)
 
 
 def test_initialize_from_function_name_with_optionals():

@@ -61,18 +61,28 @@ class Dispatcher:
             json_check(action, 'func', is_function=True)
             json_check(action, 'post-func', optional=True, is_function=True)
 
+    def execute_event(self, user, name: str, *args):
+        """ Executes the event named *name* of the handle of the user.state """
+        action = self.config['actions'][user.state]
+        if callback := action.get(name):
+            callback(user, *args)
+
+    def execute_enter_func(self, user):
+        """ Executes the pre-call of a handle """
+        return self.execute_event(user, 'enter_func')
+
+    def execute_exit_func(self, user):
+        """ Executes the pre-call of a handle """
+        return self.execute_event(user, 'exit_func')
+
     def execute_pre_func(self, user):
         """ Executes the pre-call of a handle """
-        action = self.config['actions'][user.state]
-        if callback := action.get('pre_func'):
-            callback(user)
+        return self.execute_event(user, 'pre_func')
 
     def execute_func(self, user, user_input: str):
         """ Executes the call of a handle """
-        self.config['actions'][user.state]['func'](user, user_input)
+        return self.execute_event(user, 'func', user_input)
 
     def execute_post_func(self, user):
-        """ Executes the post-call of a handle """
-        action = self.config['actions'][user.state]
-        if callback := action.get('post_func'):
-            callback(user)
+        """ Executes the pre-call of a handle """
+        return self.execute_event(user, 'post_func')
