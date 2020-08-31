@@ -19,19 +19,17 @@ def json_check(json_object: dict, key_name: str, optional=False,
     return value
 
 
-def initialize_from_function_name(state_name, env=None):
+def initialize_from_function_name(state_name, env):
     """ Initializes a handle from its name and the environment it has
         been defined in"""
-    if env is None:
-        env = globals()
     result = {}
     optionals = ['pre_func', 'post_func']
-    obligatorys = ['func']
+    mandatorys = ['func']
     for optional in optionals:
         if (value := env.get(f'{optional}_{state_name}')) is not None:
             result[optional] = value
-    for obligatory in obligatorys:
-        result[obligatory] = env[f'{obligatory}_{state_name}']
+    for mandatory in mandatorys:
+        result[mandatory] = env[f'{mandatory}_{state_name}']
     return result
 
 
