@@ -1,4 +1,5 @@
-from ..database import Database, create_user_class, create_argument_class
+from ..database import Database, create_user_class, create_argument_class,\
+                       add_relationship
 from .. import declarative_base, Column, Integer, relationship
 from . import pytest, os, patch, Mock
 
@@ -38,10 +39,9 @@ def test_init_create_database():
 
 def test_create_relation_ship():
     name, value = 'a_name', Mock()
-    config = {'sqlalchemy.url': 'sqlite:///foo.db'}
-    database = Database(config, create_database=False)
-    database.add_relationship(database.user_class, name, value)
-    assert database.user_class.__dict__.get(name) is not None
+    user_class = Mock()
+    add_relationship(user_class, name, value)
+    assert user_class.__dict__.get(name) is not None
 
 
 class Empty:

@@ -109,8 +109,8 @@ the database (ie create_database=False) and using the database **base** object
 to identify your custom tables.
 
 In case you want to create relationships with default classes, it is possible.
-You can input in the database constructor **user_rs** and **arg_rs**, list of
-tuple (name, relationship_object).
+A function **add_relationship(class_to_add, name, value)** is available in
+the database module.
 
 
 ## Usage

@@ -55,6 +55,11 @@ def create_argument_class(base):
     return Argument
 
 
+def add_relationship(class_to_add, name: str, value):
+    """ Add a relationship (value) with name to class_to_add """
+    setattr(class_to_add, name, value)
+
+
 class Database:
     """ Database representation (only show what exists) """
 
@@ -73,7 +78,3 @@ class Database:
         self.base.metadata.create_all(self.engine)
         self.session_maker = sessionmaker()
         self.session_maker.configure(bind=self.engine)
-
-    def add_relationship(self, class_to_add, name, value):
-        print(setattr)
-        setattr(class_to_add, name, value)
