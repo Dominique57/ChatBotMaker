@@ -11,6 +11,19 @@ This module is based around a bot class in which you inject the necessary code
 - Dispatcher (An object that contains all the logic rule)
 - Database (An object that allows database interaction)
 
+## General Idea
+
+User are in **states** and define what action should be executed.
+
+A state is composed of 3 event and 1 input event (or main event):
+- func(user, user\_input): **main** function called with the user's input
+- enter\_func(user): called **every** time before the user sends text in its
+current state
+- pre\_func(user): called when entering a state (ie. during change\_state)
+- post\_func(user): called when exiting a state (ie. during change\_state)
+
+![Internal shema](img/inner_shema.png)
+
 ### Components
 
 #### Messenger
