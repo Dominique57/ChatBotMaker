@@ -27,20 +27,20 @@ The dispatcher recieves your config as a dictionnary in the following format:
 <pre>
 {  
   'actions': {  
-    'handle\_name': {  
-        'enter_func': lambda user: user.send\_message('Hi there every time'),  
-        'pref_func': lambda user: user.send\_message('Hi there'),  
-        'func': lambda user, user\_input: user.change\_state('home'),  
-        'post_func': lambda user: user.send\_message('You are redirected'),  
+    'handle_name': {  
+        'enter_func': lambda user: user.send_message('Hi there every time'),  
+        'pref_func': lambda user: user.send_message('Hi there'),  
+        'func': lambda user, user_input: user.change_state('home'),  
+        'post_func': lambda user: user.send_message('You are redirected'),  
     },  
     'home': {  
-        'pref_func': lambda user: user.send\_message('Welcome back!'),  
-        'func': 'lambda user, user\_input: user.change\_state(user\_input)',  
+        'pref_func': lambda user: user.send_message('Welcome back!'),  
+        'func': 'lambda user, user_input: user.change_state(user_input)',  
     },  
     'input': {  
-        'func': 'lambda user, user\_input: (  
-                    user.store\_argument('input', user\_input),  
-                    user.change\_state('home'),  
+        'func': 'lambda user, user_input: (  
+                    user.store_argument('input', user_input),  
+                    user.change_state('home'),  
                 )',  
     },  
     'help': Dispatcher.DEFAULT,
@@ -54,7 +54,7 @@ You can associate function by their name to make the binding process easier.
 You must name your functions with {key}\_{handle\_name} (eg: func\_help,
 pre\_func\_help, post\_func\_help). You then must pass the binding table
 dictionary to the Dispatcher constructor alongside the config
-** \_\_init\_\_(self, config, env=None) ** . This generally are locals() or
+**\_\_init\_\_(self, config, env=None)** . This generally are locals() or
 globals().
 
 ###### How does it work?
@@ -87,6 +87,16 @@ The database expects a config (sqlachemy.config) object to initialize the
 database. You can postpone the database creation using create\_database=False),
 add your own ORM classes using the database.base attribute and construct the
 database using database.create_database().
+
+###### Custom tables / ORM classes
+
+You can add custom tables (thus ORM classes) by not creating immediatly the
+database (ie create_database=False) and using the database **base** object to
+identify your custom tables.
+
+In case you want to create relationships with default classes, it is possible.
+You can input in the database constructor **user_rs** and **arg_rs**, list of
+tuple (name, relationship_object).
 
 
 ## Usage
