@@ -22,7 +22,8 @@ current state
 - pre\_func(user): called when entering a state (ie. during change\_state)
 - post\_func(user): called when exiting a state (ie. during change\_state)
 
-![Internal shema](img/inner_shema.png)
+![InternalShema](https://raw.githubusercontent.com/Dominique57/ChatBotMaker/
+master/img/inner_shema.png)
 
 ### Components
 
