@@ -61,6 +61,7 @@ def test_execute_handle():
     user.execute_handle('toto')
     # Then
     dispatcher.execute_func.assert_called_once_with(user.user, 'toto')
+    dispatcher.execute_enter_func.assert_called_once_with(user.user)
 
 
 def test_get_argument_existing_with_default():

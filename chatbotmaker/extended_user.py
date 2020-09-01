@@ -28,6 +28,7 @@ class ExtendedUser:
     def execute_handle(self, user_input: str):
         """ Executes the correct handle depending of the user.state """
         self.dispatcher.execute_func(self.user, user_input)
+        self.dispatcher.execute_enter_func(self.user)
 
     def mark_seen(self):
         """ Marks the message as seen """
