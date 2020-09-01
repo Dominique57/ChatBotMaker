@@ -4,8 +4,8 @@ from . import Column, Integer, String, relationship, ForeignKey,\
 from . import ExtendedUser
 
 
-def create_user_class(base):
-    """ Creates a User class with the given relationships """
+def create_user_class(base, rs=[]):
+    """ Creates a User class with the given relationships (rs) """
     class User(base):
         """ User class """
         __tablename__ = 'users'
@@ -31,11 +31,13 @@ def create_user_class(base):
             """ Add sugar calling methods """
             self.extended = ExtendedUser(self, messenger, dispatcher, database)
 
+    for relation in rs:
+        setattr(User, relation[0], relation[1])
     return User
 
 
-def create_argument_class(base):
-    """ Creates a Argument class with the given relationships """
+def create_argument_class(base, rs=[]):
+    """ Creates a Argument class with the given relationships (rs) """
     class Argument(base):
         """ Argument class """
         __tablename__ = 'arguments'
@@ -52,23 +54,25 @@ def create_argument_class(base):
             self.name = name
             self.value = value
 
+    for relation in rs:
+        setattr(Argument, relation[0], relation[1])
     return Argument
 
 
 class Database:
     """ Database representation (only show what exists) """
 
-    def __init__(self, config, create_database=True):
+    def __init__(self, config, create_database=True, user_rs=[], arg_rs=[]):
         self.base = declarative_base()
-        self.init_default_tables()
+        self.init_default_tables(user_rs, arg_rs)
         self.engine = engine_from_config(config)
         if create_database:
             self.create_database()
 
-    def init_default_tables(self):
+    def init_default_tables(self, user_rs, arg_rs):
         """ Initializes the default classes/tables """
-        self.user_class = create_user_class(self.base)
-        self.argument_class = create_argument_class(self.base)
+        self.user_class = create_user_class(self.base, user_rs)
+        self.argument_class = create_argument_class(self.base, arg_rs)
 
     def create_database(self):
         """ Creates the database and end the final initialisation """
