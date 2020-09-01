@@ -36,12 +36,12 @@ def test_init_create_database():
     database.base.metadata.create_all.assert_called_once()
 
 
-def test_init_default_tables_with_relation():
-    with patch.object(Database, 'init_default_tables', Mock()):
-        config = {'sqlalchemy.url': 'sqlite:///foo.db'}
-        user_rs, arg_rs = Mock(), Mock()
-        database = Database(config, False, user_rs, arg_rs)
-        database.init_default_tables.assert_called_once_with(user_rs, arg_rs)
+def test_create_relation_ship():
+    name, value = 'a_name', Mock()
+    config = {'sqlalchemy.url': 'sqlite:///foo.db'}
+    database = Database(config, create_database=False)
+    database.add_relationship(database.user_class, name, value)
+    assert database.user_class.__dict__.get(name) is not None
 
 
 class Empty:
@@ -94,20 +94,6 @@ def test_extended_user_missing_attr_arg_redirection():
         user.attribute_not_existing
     assert "'ExtendedUser'" in str(exception_info)
 
-
-@pytest.mark.parametrize('class_generator', [
-    (create_user_class),
-    (create_argument_class),
-])
-def test_create_user_with_relationship(class_generator):
-    # Given
-    relation = Mock()
-    rs = [('test', relation)]
-    # When
-    user_class = class_generator(Empty, rs)
-    # Then
-    assert user_class.__dict__.get('test') is not None
-    assert getattr(user_class, 'test') == relation
 
 def test_create_argument():
     # Given
