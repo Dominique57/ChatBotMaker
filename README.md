@@ -84,15 +84,15 @@ The given database database follows the following architecture:
   - user = relationship('User', uselist=False, back\_populates='arguments')
 
 The database expects a config (sqlachemy.config) object to initialize the
-database. You can postpone the database creation using create\_database=False),
+database. You can postpone the database creation using create\_database=False,
 add your own ORM classes using the database.base attribute and construct the
 database using database.create_database().
 
 ###### Custom tables / ORM classes
 
-You can add custom tables (thus ORM classes) by not creating immediatly the
-database (ie create_database=False) and using the database **base** object to
-identify your custom tables.
+You can add custom tables (thus ORM classes) by potponing the final creation of
+the database (ie create_database=False) and using the database **base** object
+to identify your custom tables.
 
 In case you want to create relationships with default classes, it is possible.
 You can input in the database constructor **user_rs** and **arg_rs**, list of
@@ -108,7 +108,7 @@ coded. They are in chatbotmaker.default.
 #### Facebook
 - FacebookMessenger(authentication\_token)
 - facebook\_route(request, facebook\_check\_token, bot)
-  - this flask routing should be called directly from the routing point
+  - this flask routing should be called directly from the routing function
 
 #### Dev
 
