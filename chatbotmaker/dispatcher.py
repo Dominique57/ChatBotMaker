@@ -57,9 +57,10 @@ class Dispatcher:
             # check that action is a dict
             json_check(actions, name, from_type=dict)
             # check action content
-            json_check(action, 'pre-func', optional=True, is_function=True)
+            json_check(action, 'enter_func', optional=True, is_function=True)
+            json_check(action, 'pre_func', optional=True, is_function=True)
             json_check(action, 'func', is_function=True)
-            json_check(action, 'post-func', optional=True, is_function=True)
+            json_check(action, 'post_func', optional=True, is_function=True)
 
     def execute_event(self, user, name: str, *args):
         """ Executes the event named *name* of the handle of the user.state """
