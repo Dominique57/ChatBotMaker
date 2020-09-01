@@ -28,12 +28,13 @@ The dispatcher recieves your config as a dictionnary in the following format:
 {  
   'actions': {  
     'handle\_name': {  
-        'pref-func': lambda user: user.send\_message('Hi there'),  
+        'enter_func': lambda user: user.send\_message('Hi there every time'),  
+        'pref_func': lambda user: user.send\_message('Hi there'),  
         'func': lambda user, user\_input: user.change\_state('home'),  
-        'post-func': lambda user: user.send\_message('You are redirected'),  
+        'post_func': lambda user: user.send\_message('You are redirected'),  
     },  
     'home': {  
-        'pref-func': lambda user: user.send\_message('Welcome back!'),  
+        'pref_func': lambda user: user.send\_message('Welcome back!'),  
         'func': 'lambda user, user\_input: user.change\_state(user\_input)',  
     },  
     'input': {  

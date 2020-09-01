@@ -7,7 +7,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="chatbotmaker",
-    version="0.0.6",
+    version="0.0.7",
     author="Dominique MICHEL",
     author_email="dominique.michel@epita.fr",
     description="This package automates the process of bot creation",
