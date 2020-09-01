@@ -7,4 +7,4 @@ class DevMessenger(Messenger):
 
     def send(self, user_id: str, text: str):
         """ Sends to the user_id (backend must understand) the text message"""
-        print(f'{user_id} sent:\n > {text}')
+        print(f'{user_id} > {text}')
