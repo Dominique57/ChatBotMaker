@@ -4,6 +4,7 @@ from . import pytest, Mock, patch
 
 # Multiple read only variable usage (lambda avoids coverage miss detection)
 func_welcome = lambda user, user_input: user_input
+enter_func_welcome = lambda user, user_input: user_input
 pre_func_welcome = lambda user, user_input: user_input
 post_func_welcome = lambda user, user_input: user_input
 

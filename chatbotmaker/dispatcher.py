@@ -23,7 +23,7 @@ def initialize_from_function_name(state_name, env):
     """ Initializes a handle from its name and the environment it has
         been defined in"""
     result = {}
-    optionals = ['pre_func', 'post_func']
+    optionals = ['pre_func', 'post_func', 'enter_func']
     mandatorys = ['func']
     for optional in optionals:
         if (value := env.get(f'{optional}_{state_name}')) is not None:
