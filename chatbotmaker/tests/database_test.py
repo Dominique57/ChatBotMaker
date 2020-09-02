@@ -1,3 +1,4 @@
+from .. import database as db
 from ..database import Database, create_user_class, create_argument_class,\
                        add_relationship
 from .. import declarative_base, Column, Integer, relationship
@@ -20,28 +21,74 @@ def test_create_orm_classes(generator, name, attributes):
         assert attribute in user_class.__dict__.keys()
 
 
-def test_init_not_create_database():
-    with patch.object(Database, 'create_database', Mock()):
-        config = {'sqlalchemy.url': 'sqlite:///foo.db'}
-        database = Database(config, create_database=False)
-        assert database.create_database.call_count == 0
-
-
-def test_init_create_database():
-    with patch.object(Database, 'create_database', Mock()):
-        config = {'sqlalchemy.url': 'sqlite:///foo.db'}
-        database = Database(config)
-        database.create_database.assert_called_once()
-    database.base = Mock()
-    database.create_database()
-    database.base.metadata.create_all.assert_called_once()
-
-
 def test_create_relation_ship():
     name, value = 'a_name', Mock()
     user_class = Mock()
     add_relationship(user_class, name, value)
     assert user_class.__dict__.get(name) is not None
+
+
+def test_init_setup_database_connection():
+    config = {'test': 'value'}
+    engine = Mock()
+    engine_from_cfg = Mock(return_value=engine)
+    with patch.object(db, 'engine_from_config', engine_from_cfg) as engine_cfg:
+        database = Database(config, Mock())
+        engine_cfg.assert_called_once_with(config)
+        database.base.metadata.create_all.assert_called_once_with(engine)
+
+
+@patch.object(db, 'engine_from_config')
+def test_init_setup_session(engine_cfg):
+    session_maker = Mock()
+    with patch.object(db, 'sessionmaker', Mock(return_value=session_maker)):
+        database = Database({}, Mock())
+        assert database.session_maker == session_maker
+        database.session_maker.configure.\
+            assert_called_once_with(bind=database.engine)
+
+
+@patch.object(db, 'engine_from_config')
+def test_create_session(engine_cfg):
+    database = Database({}, Mock())
+    new_sess = Mock()
+    with patch.object(database, 'session_maker', Mock(return_value=new_sess)):
+        assert database.create_session() == new_sess
+        assert database.session == new_sess
+
+
+@patch.object(db, 'engine_from_config')
+def test_close_session_missing_session_open(engine_cfg):
+    database = Database({}, Mock())
+    new_sess = Mock()
+    with patch.object(database, 'session_maker', Mock(return_value=new_sess)):
+        with pytest.raises(Exception) as exception_info:
+            database.close_session()
+        assert 'no open session' in str(exception_info)
+
+
+@patch.object(db, 'engine_from_config')
+def test_close_session_with_commit(engine_cfg):
+    database = Database({}, Mock())
+    new_sess = Mock()
+    with patch.object(database, 'session_maker', Mock(return_value=new_sess)):
+        database.create_session()
+        database.close_session()
+    new_sess.commit.assert_called_once()
+    new_sess.close.assert_called_once()
+    assert database.session is None
+
+
+@patch.object(db, 'engine_from_config')
+def test_close_session_without_commit(engine_cfg):
+    database = Database({}, Mock())
+    new_sess = Mock()
+    with patch.object(database, 'session_maker', Mock(return_value=new_sess)):
+        database.create_session()
+        database.close_session(commit=False)
+    assert new_sess.commit.call_count == 0
+    new_sess.close.assert_called_once()
+    assert database.session is None
 
 
 class Empty:

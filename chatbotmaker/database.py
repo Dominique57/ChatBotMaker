@@ -63,18 +63,27 @@ def add_relationship(class_to_add, name: str, value):
 class Database:
     """ Database representation (only show what exists) """
 
-    def __init__(self, config, create_database=True, base=None):
+    session = None
+
+    def __init__(self, config: dict, base=None):
         self.base = declarative_base() if base is None else base
         # Create default tables
         self.user_class = create_user_class(self.base)
         self.argument_class = create_argument_class(self.base)
         # Continue database config
         self.engine = engine_from_config(config)
-        if create_database:
-            self.create_database()
-
-    def create_database(self):
-        """ Creates the database and end the final initialisation """
         self.base.metadata.create_all(self.engine)
         self.session_maker = sessionmaker()
         self.session_maker.configure(bind=self.engine)
+
+    def create_session(self):
+        self.session = self.session_maker()
+        return self.session
+
+    def close_session(self, commit=True):
+        if self.session is None:
+            raise Exception("Trying to close but there are no open session.")
+        if commit:
+            self.session.commit()
+        self.session.close()
+        self.session = None
