@@ -63,8 +63,8 @@ def add_relationship(class_to_add, name: str, value):
 class Database:
     """ Database representation (only show what exists) """
 
-    def __init__(self, config, create_database=True):
-        self.base = declarative_base()
+    def __init__(self, config, create_database=True, base=None):
+        self.base = declarative_base() if base is None else base
         # Create default tables
         self.user_class = create_user_class(self.base)
         self.argument_class = create_argument_class(self.base)
