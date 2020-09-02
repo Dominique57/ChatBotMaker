@@ -106,7 +106,8 @@ database using database.create_database().
 
 You can add custom tables (thus ORM classes) by potponing the final creation of
 the database (ie create_database=False) and using the database **base** object
-to identify your custom tables.
+to identify your custom tables **OR** you can create your models with your own
+base and then inject it in the database object database(base=my_base).
 
 In case you want to create relationships with default classes, it is possible.
 A function **add_relationship(class_to_add, name, value)** is available in
