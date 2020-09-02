@@ -13,7 +13,7 @@ class Bot:
 
     def user_handle(self, user_id: str, user_input: str) -> str:
         """ An implementation of the user_handle """
-        session = self.database.session_maker()
+        session = self.database.create_session()
         User = self.database.user_class
         # Get or Create the user
         user = session.query(User).filter(User.fb_id == user_id).scalar()
@@ -34,6 +34,5 @@ class Bot:
         # call the handle
         user.execute_handle(user_input)
 
-        session.commit()
-        session.close()
+        self.database.close_session()
         return f'{user_id}\'s request has been handled'
